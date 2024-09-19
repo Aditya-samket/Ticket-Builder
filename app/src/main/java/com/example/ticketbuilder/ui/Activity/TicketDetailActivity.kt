@@ -1,14 +1,15 @@
 package com.example.ticketbuilder.ui.Activity
 
-import Ticket
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.ticketbuilder.R.layout
 import com.example.ticketbuilder.ViewModel.TicketViewModel
+import com.example.ticketbuilder.ViewModel.TicketViewModelFactory
 import com.example.ticketbuilder.databinding.ActivityTicketDetailBinding
+import com.example.ticketbuilder.model.Ticket
+import com.example.ticketbuilder.repository.TicketRepository
 
 class TicketDetailActivity : AppCompatActivity() {
 
@@ -19,21 +20,23 @@ class TicketDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTicketDetailBinding.inflate(layoutInflater)
-        setContentView(layout.activity_ticket_detail)
+        setContentView(binding.root)
 
         // Retrieve the ticket ID passed from the MainActivity
         ticketId = intent.getIntExtra("ticket_id", -1)
 
-        // Initialize the ViewModel
-        ticketViewModel = ViewModelProvider(this)[TicketViewModel::class.java]
+        // Initialize the ViewModel with a ViewModelFactory to inject dependencies
+        val repository = TicketRepository.getRepository(applicationContext)
+        val factory = TicketViewModelFactory(repository)
+        ticketViewModel = ViewModelProvider(this, factory)[TicketViewModel::class.java]
 
         // Observe ticket details and display them
-        ticketViewModel.allTickets.observe(this, Observer { tickets ->
+        ticketViewModel.allTickets.observe(this) { tickets ->
             val ticket = tickets.find { it.id == ticketId }
             if (ticket != null) {
                 displayTicketDetails(ticket)
             }
-        })
+        }
 
         // Edit button click listener
         binding.editButton.setOnClickListener {
@@ -45,13 +48,13 @@ class TicketDetailActivity : AppCompatActivity() {
 
         // Delete button click listener
         binding.deleteButton.setOnClickListener {
-            ticketViewModel.allTickets.observe(this, Observer { tickets ->
+            ticketViewModel.allTickets.observe(this) { tickets ->
                 val ticketToDelete = tickets.find { it.id == ticketId }
                 if (ticketToDelete != null) {
                     ticketViewModel.delete(ticketToDelete)
                     finish()  // Close the activity after deletion
                 }
-            })
+            }
         }
     }
 
@@ -59,7 +62,7 @@ class TicketDetailActivity : AppCompatActivity() {
     private fun displayTicketDetails(ticket: Ticket) {
         binding.ticketDetailName.text = ticket.name
         binding.ticketDetailDescription.text = ticket.description
-        binding.ticketDetailPriority.text = ticket.priority.capitalize()
+        binding.ticketDetailPriority.text = ticket.priority.replaceFirstChar { it.uppercase() }
         binding.ticketDetailDueDate.text = if (ticket.dueDate.isNullOrEmpty()) "No Due Date" else ticket.dueDate
     }
 }

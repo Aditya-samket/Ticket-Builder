@@ -1,24 +1,17 @@
 package com.example.ticketbuilder.ViewModel
 
-import Ticket
-import TicketDao
-import TicketDatabase
-import TicketRepository
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.ticketbuilder.db.TicketDatabase
+import com.example.ticketbuilder.model.Ticket
+import com.example.ticketbuilder.repository.TicketRepository
 import kotlinx.coroutines.launch
 
-class TicketViewModel(ticketDao: TicketDao, application: Application) : AndroidViewModel(application) {
-    private val repository: TicketRepository
-    val allTickets: LiveData<List<Ticket>>
+class TicketViewModel(private val repository: TicketRepository) : ViewModel() {
 
-    init {
-        val ticketDao = TicketDatabase.getDatabase(application).ticketDao()
-        repository = TicketRepository(ticketDao)
-        allTickets = repository.allTickets
-    }
+    val allTickets = repository.allTickets
 
     fun insert(ticket: Ticket) = viewModelScope.launch {
         repository.insert(ticket)
@@ -30,5 +23,19 @@ class TicketViewModel(ticketDao: TicketDao, application: Application) : AndroidV
 
     fun delete(ticket: Ticket) = viewModelScope.launch {
         repository.delete(ticket)
+    }
+
+    fun getTicketById(ticketId: Int): LiveData<Ticket> {
+        return repository.getTicketById(ticketId)
+    }
+}
+
+class TicketViewModelFactory(private val repository: TicketRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(TicketViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return TicketViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

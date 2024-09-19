@@ -1,59 +1,60 @@
 package com.example.ticketbuilder.ui.Adapter
 
-import Ticket
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ticketbuilder.R
+import com.example.ticketbuilder.databinding.TicketItemBinding
+import com.example.ticketbuilder.model.Ticket
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class TicketListAdapter(private var ticket: List<Ticket>,private val onItemClicked: (Ticket) -> Unit) :
-    RecyclerView.Adapter<TicketListAdapter.TicketViewHolder>() {
+class TicketListAdapter(private val onItemClicked: OnItemClickedListener) :
+    ListAdapter<Ticket,TicketListAdapter.ViewHolder>(COMPARATOR) {
 
-    private var tickets = emptyList<Ticket>()
+    class ViewHolder(val binding: TicketItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TicketViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.ticket_item,
-            parent, false)
-        return TicketViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = TicketItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: TicketViewHolder, position: Int) {
-        val currentTicket = tickets[position]
-        holder.bind(currentTicket, onItemClicked)
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val currentTicket = getItem(position)
 
-    override fun getItemCount() = tickets.size
-
-    fun updateTickets(list: List<Ticket>) {
-        tickets = list
-        notifyDataSetChanged()
-        DiffUtilCallback().areItemsTheSame(tickets[0], tickets[1])
-    }
-    class DiffUtilCallback : DiffUtil.ItemCallback<Ticket>(){
-        override fun areItemsTheSame(oldItem: Ticket, newItem: Ticket) = oldItem.id == newItem.id
-
-        override fun areContentsTheSame(oldItem: Ticket, newItem: Ticket) = oldItem == newItem
-
-    }
-    inner class TicketViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var ticketName: TextView = itemView.findViewById(R.id.ticketName)
-        private var ticketDescription: TextView = itemView.findViewById(R.id.ticketDescription)
-        private var ticketPriority: TextView = itemView.findViewById(R.id.ticketPriority)
-        private var ticketDueDate: TextView = itemView.findViewById(R.id.ticketDueDate)
-
-        fun bind(ticket: Ticket, onItemClicked: (Ticket) -> Unit) {
-            itemView.setOnClickListener {
-                onItemClicked(ticket)
+        if (currentTicket != null) {
+            // Bind ticket data to the view holder
+            holder.binding.apply {
+                ticketName.text = currentTicket.name
+                ticketDescription.text = currentTicket.description
+                ticketPriority.text = currentTicket.priority
+                ticketDueDate.text = currentTicket.dueDate
             }
-            // Bind ticket data to itemView elements
-            ticketName.text = ticket.name
-            ticketDescription.text = ticket.description
-            ticketPriority.text = ticket.priority
-            ticketDueDate.text = ticket.dueDate
+        } else {
+            Toast.makeText(holder.itemView.context, "Ticket List is empty", Toast.LENGTH_SHORT).show()
         }
+        holder.itemView.setOnClickListener {
+            onItemClicked.onItemClick(currentTicket)
+        }
+    }
+
+    interface OnItemClickedListener {
+        fun onItemClick(ticket: Ticket)
+    }
+
+    companion object {
+        val COMPARATOR = object : DiffUtil.ItemCallback<Ticket>() {
+            override fun areItemsTheSame(oldItem: Ticket, newItem: Ticket): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Ticket, newItem: Ticket): Boolean {
+                return oldItem == newItem
+            }
+        }
+
     }
 }
 

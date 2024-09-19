@@ -2,7 +2,7 @@
     <string name="app_name">Ticket Builder</string>
     <string name="add_ticket">Add Ticket</string>
     <string name="save">Save</string>
-    <string name="due_date_optional">Due Date (Optional)</string>
+    <string name="due_date">Due Date</string>
     <string name="ticket_description">Ticket Description</string>
     <string name="ticket_name">Ticket Name</string>
     <string name="priority_high">Priority: High</string>
