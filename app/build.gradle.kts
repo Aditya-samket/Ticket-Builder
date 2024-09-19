@@ -82,4 +82,18 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+
+    // Add Compose libraries (Ensure versions match your project setup)
+    implementation ("androidx.compose.ui:ui:1.4.3") // Example Compose version
+    implementation ("androidx.compose.material:material:1.4.3")
+    implementation ("androidx.compose.ui:ui-tooling:1.4.3")
+
+    // JUnit for testing
+    testImplementation ("junit:junit:4.13.2")
+
+    // Add the UI testing dependency for Compose
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.4.3")
+
+    // Optional: For UI testing and tool support
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.4.3")
 }
