@@ -7,4 +7,11 @@
     <string name="ticket_name">Ticket Name</string>
     <string name="priority_high">Priority: High</string>
     <string name="date">Due: 2024-09-30</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <!-- Other strings -->
+    <string-array name="sorting_options">
+        <item>Date Ascending</item>
+        <item>Date Descending</item>
+    </string-array>
 </resources>

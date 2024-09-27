@@ -2,10 +2,12 @@ package com.example.ticketbuilder.ui.Activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.ticketbuilder.R
 import com.example.ticketbuilder.ViewModel.TicketViewModel
 import com.example.ticketbuilder.ViewModel.TicketViewModelFactory
 import com.example.ticketbuilder.databinding.ActivityMainBinding
@@ -45,6 +47,36 @@ class MainActivity : AppCompatActivity(), TicketListAdapter.OnItemClickedListene
         binding.addTicketButton.setOnClickListener {
            startActivity(Intent(this, AddEditTicketActivity::class.java))
         }
+
+        // Set up sorting Spinner
+        ArrayAdapter.createFromResource(this, R.array.sorting_options, android.R.layout.simple_spinner_item).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.sortSpinner.adapter = adapter
+        }
+
+        binding.sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
+                val selectedOption = parent.getItemAtPosition(position) as String
+                when (selectedOption) {
+                    "Date Ascending" -> sortTicketsAscending()
+                    "Date Descending" -> sortTicketsDescending()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // No-op
+            }
+        }
+    }
+
+    private fun sortTicketsAscending() {
+        val sortedList = ticketViewModel.allTickets.value?.sortedBy { it.dueDate }
+        adapter.submitList(sortedList)
+    }
+
+    private fun sortTicketsDescending() {
+        val sortedList = ticketViewModel.allTickets.value?.sortedByDescending { it.dueDate }
+        adapter.submitList(sortedList)
     }
 
     override fun onItemClick(ticket: Ticket) {

@@ -1,62 +1,71 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    android:background="@android:color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
-    <!-- Ticket Name -->
-    <TextView
-        android:id="@+id/ticketName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="@string/ticket_name"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <!-- Ticket Description -->
-    <TextView
-        android:id="@+id/ticketDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:text="@string/ticket_description"
-        android:textColor="@color/grey"
-        android:textSize="14sp" />
-
-    <!-- Priority and Due Date Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:background="@drawable/border"
+        android:padding="16dp">
 
-        <!-- Ticket Priority -->
+        <!-- Ticket Name -->
         <TextView
-            android:id="@+id/ticketPriority"
-            android:layout_width="0dp"
+            android:id="@+id/ticketName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/priority_high"
-            android:textColor="@color/red"
-            android:textSize="14sp" />
-
-        <!-- Ticket Due Date -->
-        <TextView
-            android:id="@+id/ticketDueDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:text="@string/date"
+            android:layout_marginBottom="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/ticket_name"
             android:textColor="@color/black"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-</LinearLayout>
+        <!-- Ticket Description -->
+        <TextView
+            android:id="@+id/ticketDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/ticket_description"
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
+
+        <!-- Priority and Due Date Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Ticket Priority -->
+            <TextView
+                android:id="@+id/ticketPriority"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/priority_high"
+                android:textColor="@color/red"
+                android:textSize="14sp" />
+
+            <!-- Ticket Due Date -->
+            <TextView
+                android:id="@+id/ticketDueDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="@string/date"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
